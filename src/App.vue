@@ -1,9 +1,9 @@
 <script setup>
-
+import Header from './components/Header.vue';
 </script>
 
 <template>
   <div>
-    <h1>Initial Setup</h1>
+    <Header />
   </div>
 </template>
