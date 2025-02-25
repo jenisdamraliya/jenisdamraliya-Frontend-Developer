@@ -38,13 +38,30 @@ const store = createStore({
             selectedItem: null,
             currentPage: 1,
             itemsPerPage: 6,
+            selectedFilter: null,
+            selectedSort: null
         };
     },
     getters: {
-        paginatedItems(state) {
+        filteredAndSortedItems(state) {
+            let items = [...state.foodItems];
+
+            // Apply filter
+            if (state.selectedFilter) {
+                items = items.filter(item => item.location === state.selectedFilter);
+            }
+
+            // Apply sorting
+            if (state.selectedSort === 'asc') {
+                items.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (state.selectedSort === 'desc') {
+                items.sort((a, b) => b.name.localeCompare(a.name));
+            }
+
+            // Pagination logic
             const start = (state.currentPage - 1) * state.itemsPerPage;
             const end = start + state.itemsPerPage;
-            return state.foodItems.slice(start, end);
+            return items.slice(start, end);
         },
         totalPages(state) {
             return Math.ceil(state.foodItems.length / state.itemsPerPage);
@@ -62,6 +79,12 @@ const store = createStore({
         },
         setCurrentPage(state, page) {
             state.currentPage = page;
+        },
+        setSelectedFilter(state, filter) {
+            state.selectedFilter = filter;
+        },
+        setSelectedSort(state, sortOrder) {
+            state.selectedSort = sortOrder;
         }
     },
     actions: {
@@ -72,19 +95,19 @@ const store = createStore({
                 id: meal.idMeal,
                 name: meal.strMeal,
                 image: meal.strMealThumb,
-                rating: (Math.random() * 5).toFixed(1), // Generate random rating
-                discount: generateRandomDiscount(), // Dynamic discount
-                cuisines: generateRandomCuisines(), // Dynamic cuisines
-                location: generateRandomLocation(), // Dynamic location
-                deliveryTime: generateRandomDeliveryTime() // Dynamic delivery time
+                rating: (Math.random() * 5).toFixed(1),
+                discount: generateRandomDiscount(),
+                cuisines: generateRandomCuisines(),
+                location: generateRandomLocation(),
+                deliveryTime: generateRandomDeliveryTime()
             }));
             commit('setFoodItems', foodItems);
         },
-        openModal({ commit }, item) {
-            commit('setSelectedItem', item);
+        filterFoodItems({ commit }, filter) {
+            commit('setSelectedFilter', filter);
         },
-        closeModal({ commit }) {
-            commit('clearSelectedItem');
+        sortFoodItems({ commit }, sortOrder) {
+            commit('setSelectedSort', sortOrder);
         },
         nextPage({ commit, state, getters }) {
             if (state.currentPage < getters.totalPages) {
@@ -100,4 +123,3 @@ const store = createStore({
 });
 
 export default store;
-

@@ -24,8 +24,7 @@ import FoodItemCard from './FoodItemCard.vue';
 import FoodItemModal from './FoodItemModal.vue';
 
 const store = useStore();
-
-const paginatedItems = computed(() => store.getters.paginatedItems);
+const paginatedItems = computed(() => store.getters.filteredAndSortedItems);
 const selectedItem = computed(() => store.state.selectedItem);
 const currentPage = computed(() => store.state.currentPage);
 const totalPages = computed(() => store.getters.totalPages);
