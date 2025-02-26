@@ -118,6 +118,12 @@ const store = createStore({
             if (state.currentPage > 1) {
                 commit('setCurrentPage', state.currentPage - 1);
             }
+        },
+        openModal({ commit }, item) {
+            commit('setSelectedItem', item); 
+        },
+        closeModal({ commit }) {
+            commit('clearSelectedItem'); 
         }
     }
 });
